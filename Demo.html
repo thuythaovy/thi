@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Form kiểm tra dữ liệu</title>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        form {
+            width: 550px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-top: 12px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 6px;
+            margin-top: 4px;
+            box-sizing: border-box;
+        }
+
+        small {
+            display: block;
+            color: #555;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .error {
+            color: red;
+            font-size: 13px;
+            margin-top: 3px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 8px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Form kiểm tra dữ liệu</h2>
+        <form id="validateForm">
+            <label>1. Text (số hay chuỗi):</label>
+            <input type="text" id="textInput">
+            <small>Nhập một chuỗi hoặc số bất kỳ.</small>
+            <div class="error"></div>
+
+            <label>2. Ngày:</label>
+            <input type="date" id="date">
+            <small>Chọn ngày từ lịch (ví dụ: 20-05-2024).</small>
+            <div class="error"></div>
+
+            <label>3. Ngày sinh hợp lệ:</label>
+            <input type="date" id="birthday">
+            <small>Chọn ngày sinh từ lịch (ví dụ: 05-10-2000).</small>
+            <div class="error"></div>
+
+            <label>4. Họ và tên (ít nhất 2 từ):</label>
+            <input type="text" id="fullname">
+            <small>Ví dụ: Nguyễn Văn A (không chứa số hoặc ký tự đặc biệt).</small>
+            <div class="error"></div>
+
+            <label>5. Mã bệnh nhân (BN-YYYYMMDD-001):</label>
+            <input type="text" id="patient">
+            <small>Ví dụ: BN-20240801-001.</small>
+            <div class="error"></div>
+
+            <label>6. Mã thẻ bảo hiểm:</label>
+            <input type="text" id="insurance">
+            <small>Ví dụ: AB12345678 (2 chữ + 8 số).</small>
+            <div class="error"></div>
+
+            <label>7. Số điện thoại VN:</label>
+            <input type="text" id="phone">
+            <small>Bắt đầu bằng 0 và có 10 chữ số (ví dụ: 0912345678).</small>
+            <div class="error"></div>
+
+            <label>8. CCCD (9 hoặc 12 số):</label>
+            <input type="text" id="cccd">
+            <small>Ví dụ: 123456789 hoặc 012345678912.</small>
+            <div class="error"></div>
+
+            <label>9. Mã bưu điện Việt Nam (5 số):</label>
+            <input type="text" id="zipcode">
+            <small>Ví dụ: 70000.</small>
+            <div class="error"></div>
+
+            <label>10. Thẻ tín dụng (16 số):</label>
+            <input type="text" id="creditcard">
+            <small>Ví dụ: 1234 5678 9012 3456 (có thể có khoảng trắng).</small>
+            <div class="error"></div>
+
+            <label>11. Địa chỉ IP (IPv4):</label>
+            <input type="text" id="ip">
+            <small>Ví dụ: 192.168.1.1.</small>
+            <div class="error"></div>
+
+            <label>12. Mật khẩu mạnh:</label>
+            <input type="password" id="password">
+            <small>Ít nhất 8 ký tự, gồm chữ hoa, chữ thường và số.</small>
+            <div class="error"></div>
+
+            <label>13. Email:</label>
+            <input type="text" id="email">
+            <small>Ví dụ: example@gmail.com.</small>
+            <div class="error"></div>
+
+            <label>14. URL:</label>
+            <input type="text" id="url">
+            <small>Ví dụ: https://www.example.com.</small>
+            <div class="error"></div>
+
+            <button type="submit">Kiểm tra tất cả</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("validateForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const errors = document.querySelectorAll(".error");
+            errors.forEach(e => e.innerText = "");
+
+            let valid = true;
+            function setError(index, message) {
+                errors[index].innerText = message;
+                valid = false;
+            }
+
+            const val = id => document.getElementById(id).value.trim();
+
+            // 1. Text
+            const text = val("textInput");
+            if (text === "") setError(0, "Không được để trống!");
+            else errors[0].innerText = isNaN(text) ? "Đây là chuỗi" : "Đây là số";
+
+            // 2. Ngày
+            const date = val("date");
+            if (!date) setError(1, "Vui lòng chọn một ngày!");
+            else {
+                const dateObj = new Date(date);
+                if (isNaN(dateObj.getTime())) setError(1, "Ngày không hợp lệ!");
+            }
+
+            // 3. Ngày sinh hợp lệ
+            const birthday = val("birthday");
+            if (!birthday) setError(2, "Vui lòng chọn ngày sinh!");
+            else {
+                const dateObj = new Date(birthday);
+                if (isNaN(dateObj.getTime())) setError(2, "Ngày sinh không hợp lệ!");
+                else if (dateObj > new Date()) setError(2, "Ngày sinh không được trong tương lai!");
+            }
+
+            // 4. Họ tên
+            if (!/^[A-Za-zÀ-ỹ]+(\s+[A-Za-zÀ-ỹ]+)+$/.test(val("fullname")))
+                setError(3, "Họ tên phải ≥2 từ, không số/ký tự đặc biệt!");
+
+            // 5. Mã bệnh nhân
+            if (!/^BN-\d{8}-\d{3}$/.test(val("patient")))
+                setError(4, "Mã bệnh nhân không đúng định dạng!");
+
+            // 6. Mã bảo hiểm
+            if (!/^[A-Z]{2}\d{8}$/.test(val("insurance")))
+                setError(5, "Mã bảo hiểm phải 2 chữ + 8 số!");
+
+            // 7. Điện thoại VN
+            if (!/^0\d{9}$/.test(val("phone")))
+                setError(6, "Số điện thoại phải bắt đầu 0 + 10 số!");
+
+            // 8. CCCD
+            if (!/^(\d{9}|\d{12})$/.test(val("cccd")))
+                setError(7, "CCCD phải 9 hoặc 12 số!");
+
+            // 9. Mã bưu điện
+            if (!/^\d{5}$/.test(val("zipcode")))
+                setError(8, "Mã bưu điện phải gồm 5 số!");
+
+            // 10. Thẻ tín dụng
+            if (!/^(?:\d{4}\s?){4}$/.test(val("creditcard")))
+                setError(9, "Thẻ tín dụng phải gồm 16 số!");
+
+            // 11. IP
+            if (!/^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$/.test(val("ip")))
+                setError(10, "Địa chỉ IP không hợp lệ!");
+
+            // 12. Mật khẩu
+            if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(val("password")))
+                setError(11, "Mật khẩu yếu, phải ≥8 ký tự, gồm chữ hoa, thường và số!");
+
+            // 13. Email
+            if (!/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/.test(val("email")))
+                setError(12, "Email không hợp lệ!");
+
+            // 14. URL
+            if (!/^(https?:\/\/)?([^\s$.?#].[^\s]*)$/.test(val("url")))
+                setError(13, "URL không hợp lệ!");
+
+            if (valid) alert("Tất cả dữ liệu hợp lệ!");
+            else alert("Có lỗi, vui lòng kiểm tra lại!");
+        });
+    </script>
+</body>
+
+</html>
