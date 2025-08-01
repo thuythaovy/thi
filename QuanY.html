@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bệnh viện Quân Y 175</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f4f4f4;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: white;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .logo img {
+            max-width: 600px;
+            height: auto;
+        }
+
+        .nav {
+            background: #84f09d;
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0 10px 20px;
+            text-align: left;
+        }
+
+        .nav a {
+            margin-right: 20px;
+            text-decoration: none;
+            color: #0066cc;
+            font-size: 16px;
+        }
+
+        h2 {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 24px;
+        }
+
+        table {
+            width: 95%;
+            margin: auto;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .blue-row,
+        .footer {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        /* Modal đơn giản */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            padding: 20px 20px 40px 20px;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            margin: 0;
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin: 10px 0;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        /* Đổi màu đỏ cho ký tự * trong label */
+        label .required {
+            color: red;
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-top: 4px;
+        }
+
+        .error {
+            color: red;
+            font-size: 0.85em;
+        }
+
+        .invalid {
+            border: 2px solid red;
+            background: #ffecec;
+        }
+
+        .btn-register {
+            background: #007bff;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .author-info {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            font-size: 16px;
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo"><img src="img/logo175.png" alt="Logo Bệnh viện Quân Y 175"></div>
+        </div>
+        <!-- Nav -->
+        <div class="nav">
+            <a href="#">Trang chủ</a>
+            <a href="#">Giới thiệu</a>
+            <a href="#">Chuyên khoa</a>
+            <a href="#" id="openModal">Đăng ký khám bệnh</a>
+        </div>
+        <!-- Table -->
+        <h2>DANH SÁCH ĐĂNG KÝ KHÁM BỆNH TRỰC TIẾP</h2>
+        <table id="patientTable">
+            <tr>
+                <th>STT</th>
+                <th>Hình thức</th>
+                <th>Mã thẻ bảo hiểm</th>
+                <th>Họ tên</th>
+                <th>Tuổi</th>
+                <th>Số điện thoại</th>
+                <th>Địa chỉ</th>
+                <th>Dịch vụ</th>
+                <th>Tỉ lệ thanh toán</th>
+            </tr>
+            <tr>
+                <td>(1)</td>
+                <td>(2)</td>
+                <td>(3)</td>
+                <td>(4)</td>
+                <td>(5)</td>
+                <td>(6)</td>
+                <td>(7)</td>
+                <td>(8)</td>
+                <td>(9)</td>
+            </tr>
+        </table>
+        <!-- Footer -->
+        <div class="footer">
+            21002595-Nguyễn Phước Điền-DHKHMT17A
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modalForm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">THÔNG TIN BỆNH NHÂN ĐĂNG KÝ</h3>
+                <button class="btn-close" id="closeModal">&times;</button>
+            </div>
+            <div class="form-group">
+                <input type="radio" name="hinhthuc" value="Nội trú"> Nội trú
+                <input type="radio" name="hinhthuc" value="Ngoại trú"> Ngoại trú
+            </div>
+            <div class="form-group">
+                <label>Mã thẻ bảo hiểm <span class="required">*</span></label>
+                <input type="text" id="maThe">
+                <div class="error" id="errMa"></div>
+            </div>
+            <div class="form-group">
+                <label>Họ tên <span class="required">*</span></label>
+                <input type="text" id="hoTen">
+                <div class="error" id="errTen"></div>
+            </div>
+            <div class="form-group">
+                <label>Tuổi <span class="required">*</span></label>
+                <input type="text" id="tuoi">
+                <div class="error" id="errTuoi"></div>
+            </div>
+            <div class="form-group">
+                <label>Số điện thoại <span class="required">*</span></label>
+                <input type="text" id="soDT">
+                <div class="error" id="errSDT"></div>
+            </div>
+            <div class="form-group">
+                <label>Địa chỉ <span class="required">*</span></label>
+                <input type="text" id="diaChi">
+                <div class="error" id="errDC"></div>
+            </div>
+            <div class="form-group">
+                <label>Dịch vụ:</label><br>
+                <input type="checkbox" class="dichVu" value="Bác sĩ theo yêu cầu"> Bác sĩ theo yêu cầu
+                <input type="checkbox" class="dichVu" value="Phòng dịch vụ cao cấp"> Phòng dịch vụ cao cấp
+                <input type="checkbox" class="dichVu" value="Trả kết quả tại nhà"> Trả kết quả tại nhà
+            </div>
+            <div class="form-group">
+                <label>Đối tượng khám bệnh:</label>
+                <select id="doiTuong">
+                    <option value="40%">Quân nhân</option>
+                    <option value="50%">Dân thường</option>
+                    <option value="60%">Trẻ em dưới 16 tuổi</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Tỉ lệ thanh toán:</label>
+                <input type="text" id="tiLe" disabled>
+            </div>
+            <button class="btn-register" id="btnDangKy">Đăng ký</button>
+            <div class="author-info">Nguyễn Phước Điền - 21002595</div>
+        </div>
+    </div>
+
+    <script>
+        let soThuTu = 1;
+        const modal = document.getElementById("modalForm");
+
+        document.getElementById("openModal").onclick = e => { e.preventDefault(); modal.style.display = "flex"; };
+        document.getElementById("closeModal").onclick = () => modal.style.display = "none";
+        window.onclick = e => { if (e.target === modal) modal.style.display = "none"; };
+
+        document.getElementById("doiTuong").onchange = function () {
+            document.getElementById("tiLe").value = this.value;
+        };
+
+        function hienLoi(idInput, idThongBao, thongBao) {
+            let oInput = document.getElementById(idInput);
+            let oThongBao = document.getElementById(idThongBao);
+            if (thongBao) { oThongBao.textContent = thongBao; oInput.classList.add("invalid"); }
+            else { oThongBao.textContent = ""; oInput.classList.remove("invalid"); }
+        }
+
+        function kiemTraDuLieu() {
+            let hopLe = true;
+            let maThe = document.getElementById("maThe").value.trim();
+            let hoTen = document.getElementById("hoTen").value.trim();
+            let tuoi = document.getElementById("tuoi").value.trim();
+            let soDT = document.getElementById("soDT").value.trim();
+            let diaChi = document.getElementById("diaChi").value.trim();
+
+            let mauMaThe = /^[A-Z]{2}[0-9]{1,2}[A-Z]{2}[0-9]{9,10}$/;
+            let mauTen = /^[A-ZÀ-Ỹ][a-zà-ỹ]+(\s[A-ZÀ-Ỹ][a-zà-ỹ]+)+$/;
+            let mauSDT = /^(03|05|07|08|09)[0-9]{8}$/;
+
+            if (!maThe) { hienLoi("maThe", "errMa", "Vui lòng nhập mã thẻ bảo hiểm"); hopLe = false; }
+            else if (!mauMaThe.test(maThe)) { hienLoi("maThe", "errMa", "Mã thẻ bảo hiểm không hợp lệ"); hopLe = false; }
+            else { hienLoi("maThe", "errMa", ""); }
+
+            if (!hoTen) { hienLoi("hoTen", "errTen", "Vui lòng nhập họ tên"); hopLe = false; }
+            else if (!mauTen.test(hoTen)) { hienLoi("hoTen", "errTen", "Họ tên phải viết hoa chữ cái đầu mỗi từ"); hopLe = false; }
+            else { hienLoi("hoTen", "errTen", ""); }
+
+            if (!tuoi) { hienLoi("tuoi", "errTuoi", "Vui lòng nhập tuổi"); hopLe = false; }
+            else if (!/^\d+$/.test(tuoi) || tuoi < 1 || tuoi > 120) { hienLoi("tuoi", "errTuoi", "Tuổi phải từ 1 đến 120"); hopLe = false; }
+            else { hienLoi("tuoi", "errTuoi", ""); }
+
+            if (!soDT) { hienLoi("soDT", "errSDT", "Vui lòng nhập số điện thoại"); hopLe = false; }
+            else if (!mauSDT.test(soDT)) { hienLoi("soDT", "errSDT", "Số điện thoại không hợp lệ"); hopLe = false; }
+            else { hienLoi("soDT", "errSDT", ""); }
+
+            if (!diaChi) { hienLoi("diaChi", "errDC", "Vui lòng nhập địa chỉ"); hopLe = false; }
+            else if (diaChi.length < 5) { hienLoi("diaChi", "errDC", "Địa chỉ quá ngắn"); hopLe = false; }
+            else { hienLoi("diaChi", "errDC", ""); }
+
+            return hopLe;
+        }
+
+        document.getElementById("btnDangKy").onclick = () => {
+            if (!kiemTraDuLieu()) return;
+            let hinhThuc = document.querySelector("input[name='hinhthuc']:checked")?.value || "";
+            let maThe = document.getElementById("maThe").value;
+            let hoTen = document.getElementById("hoTen").value;
+            let tuoi = document.getElementById("tuoi").value;
+            let soDT = document.getElementById("soDT").value;
+            let diaChi = document.getElementById("diaChi").value;
+            let dichVu = Array.from(document.querySelectorAll(".dichVu:checked")).map(cb => cb.value).join(", ");
+            let tiLe = document.getElementById("tiLe").value;
+
+            let bang = document.getElementById("patientTable");
+            let hangMoi = bang.insertRow(bang.rows.length);
+            hangMoi.insertCell(0).textContent = soThuTu++;
+            hangMoi.insertCell(1).textContent = hinhThuc;
+            hangMoi.insertCell(2).textContent = maThe;
+            hangMoi.insertCell(3).textContent = hoTen;
+            hangMoi.insertCell(4).textContent = tuoi;
+            hangMoi.insertCell(5).textContent = soDT;
+            hangMoi.insertCell(6).textContent = diaChi;
+            hangMoi.insertCell(7).textContent = dichVu;
+            hangMoi.insertCell(8).textContent = tiLe;
+
+            modal.style.display = "none";
+            document.querySelectorAll("#modalForm input, #modalForm select").forEach(el => {
+                if (el.type === "radio" || el.type === "checkbox") el.checked = false;
+                else el.value = "";
+            });
+        };
+    </script>
+</body>
+
+</html>
