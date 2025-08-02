@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Thông Tin Du Lịch</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 500px;
+            margin: 50px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .error {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 3px;
+        }
+
+        .success {
+            text-align: center;
+            color: green;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .general-error {
+            text-align: center;
+            color: red;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Thông Tin Cá Nhân - Du lịch</h1>
+        <form id="infoForm" novalidate>
+            <label>Họ và tên:</label>
+            <input type="text" id="name">
+            <div class="error" id="error-name"></div>
+
+            <label>Ngày sinh:</label>
+            <input type="date" id="dob">
+            <div class="error" id="error-dob"></div>
+
+            <label>Số CCCD:</label>
+            <input type="text" id="cccd">
+            <div class="error" id="error-cccd"></div>
+
+            <label>Ngày đi:</label>
+            <input type="date" id="departure">
+            <div class="error" id="error-departure"></div>
+
+            <label>Ngày về:</label>
+            <input type="date" id="return">
+            <div class="error" id="error-return"></div>
+
+            <label>Số điện thoại:</label>
+            <input type="text" id="phone" placeholder="0XXX-XXXXXXX">
+            <div class="error" id="error-phone"></div>
+
+            <label>Email:</label>
+            <input type="email" id="email">
+            <div class="error" id="error-email"></div>
+
+            <button type="button" onclick="validateForm()">Gửi thông tin</button>
+            <div class="general-error" id="general-error"></div>
+            <div class="success" id="success-message"></div>
+        </form>
+    </div>
+
+    <script>
+        function clearErrors() {
+            const errors = document.querySelectorAll(".error");
+            errors.forEach(e => e.innerText = "");
+            document.getElementById("success-message").innerText = "";
+            document.getElementById("general-error").innerText = "";
+        }
+
+        function validateForm() {
+            clearErrors();
+
+            const name = document.getElementById("name").value.trim();
+            const dob = document.getElementById("dob").value;
+            const cccd = document.getElementById("cccd").value.trim();
+            const departure = document.getElementById("departure").value;
+            const retDate = document.getElementById("return").value;
+            const phone = document.getElementById("phone").value.trim();
+            const email = document.getElementById("email").value.trim();
+
+            const today = new Date().toISOString().split('T')[0];
+            let valid = true;
+
+            // Kiểm tra từng trường và hiển thị lỗi tương ứng
+            if (!name) {
+                document.getElementById("error-name").innerText = "Vui lòng nhập họ tên.";
+                valid = false;
+            } else if (!/^[A-ZÀ-Ỹ][a-zà-ỹ]+( [A-ZÀ-Ỹ][a-zà-ỹ]+)+$/.test(name)) {
+                document.getElementById("error-name").innerText = "Họ tên phải viết hoa chữ cái đầu mỗi từ.";
+                valid = false;
+            }
+
+            if (!dob) {
+                document.getElementById("error-dob").innerText = "Vui lòng chọn ngày sinh.";
+                valid = false;
+            } else if (dob >= today) {
+                document.getElementById("error-dob").innerText = "Ngày sinh phải trước ngày hiện tại.";
+                valid = false;
+            }
+
+            if (!cccd) {
+                document.getElementById("error-cccd").innerText = "Vui lòng nhập số CCCD.";
+                valid = false;
+            } else if (!/^\d{12}$/.test(cccd)) {
+                document.getElementById("error-cccd").innerText = "CCCD phải gồm 12 chữ số.";
+                valid = false;
+            }
+
+            if (!departure) {
+                document.getElementById("error-departure").innerText = "Vui lòng chọn ngày đi.";
+                valid = false;
+            } else if (departure < today) {
+                document.getElementById("error-departure").innerText = "Ngày đi phải sau ngày hiện tại.";
+                valid = false;
+            }
+
+            if (!retDate) {
+                document.getElementById("error-return").innerText = "Vui lòng chọn ngày về.";
+                valid = false;
+            } else if (retDate < departure) {
+                document.getElementById("error-return").innerText = "Ngày về phải sau ngày đi.";
+                valid = false;
+            }
+
+            if (!phone) {
+                document.getElementById("error-phone").innerText = "Vui lòng nhập số điện thoại.";
+                valid = false;
+            } else if (!/^0\d{3}-\d{7}$/.test(phone)) {
+                document.getElementById("error-phone").innerText = "Định dạng đúng: 0XXX-XXXXXXX.";
+                valid = false;
+            }
+
+            if (!email) {
+                document.getElementById("error-email").innerText = "Vui lòng nhập email.";
+                valid = false;
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                document.getElementById("error-email").innerText = "Email không đúng định dạng.";
+                valid = false;
+            }
+
+            // Nếu có lỗi => hiển thị thêm thông báo chung
+            if (!valid) {
+                document.getElementById("general-error").innerText = "Hãy nhập các thông tin cần thiết!";
+                return;
+            }
+
+            // Nếu hợp lệ
+            document.getElementById("success-message").innerText = "Gửi thông tin thành công!";
+        }
+    </script>
+</body>
+</html>
